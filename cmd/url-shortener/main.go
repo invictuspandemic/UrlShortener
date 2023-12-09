@@ -8,6 +8,7 @@ import (
 	"url-shortener/internal/config"
 	mwLogger "url-shortener/internal/http-server/middleware/logger"
 	"url-shortener/internal/lib/logger/cslog"
+	"url-shortener/internal/lib/logger/handlers/slogpretty"
 	"url-shortener/internal/storage/sqlite"
 
 	"github.com/go-chi/chi/v5"
@@ -56,14 +57,7 @@ func setupLogger(loggerCFG config.Logger) *slog.Logger {
 	var log *slog.Logger
 	switch loggerCFG.LogType {
 	case "text":
-		log = slog.New(
-			slog.NewTextHandler(
-				os.Stdout,
-				&slog.HandlerOptions{
-					Level: slog.Level(loggerCFG.LogLevel),
-				},
-			),
-		)
+		log = setupPrettySlog()
 	case "json":
 		log = slog.New(
 			slog.NewJSONHandler(
@@ -82,4 +76,16 @@ func setupLogger(loggerCFG config.Logger) *slog.Logger {
 		)
 	}
 	return log
+}
+
+func setupPrettySlog() *slog.Logger {
+	opts := slogpretty.PrettyHandlerOptions{
+		SlogOpts: &slog.HandlerOptions{
+			Level: slog.LevelDebug,
+		},
+	}
+
+	handler := opts.NewPrettyHandler(os.Stdout)
+
+	return slog.New(handler)
 }
