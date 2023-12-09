@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"io"
 	stdLog "log"
+	"log/slog"
 
 	"github.com/fatih/color"
-	"golang.org/x/exp/slog"
 )
 
 type PrettyHandlerOptions struct {
