@@ -56,8 +56,23 @@ func main() {
 func setupLogger(loggerCFG config.Logger) *slog.Logger {
 	var log *slog.Logger
 	switch loggerCFG.LogType {
+	case "pretty":
+		log = slog.New(
+			slog.NewTextHandler(
+				os.Stdout,
+				&slog.HandlerOptions{
+					Level: slog.Level(loggerCFG.LogLevel),
+				},
+			),
+		)
 	case "text":
-		log = setupPrettySlog()
+		log = slog.New(
+			slog.NewTextHandler(
+				os.Stdout, &slog.HandlerOptions{
+					Level: slog.Level(loggerCFG.LogLevel),
+				},
+			),
+		)
 	case "json":
 		log = slog.New(
 			slog.NewJSONHandler(
