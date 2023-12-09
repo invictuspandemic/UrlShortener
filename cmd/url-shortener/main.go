@@ -57,14 +57,7 @@ func setupLogger(loggerCFG config.Logger) *slog.Logger {
 	var log *slog.Logger
 	switch loggerCFG.LogType {
 	case "pretty":
-		log = slog.New(
-			slog.NewTextHandler(
-				os.Stdout,
-				&slog.HandlerOptions{
-					Level: slog.Level(loggerCFG.LogLevel),
-				},
-			),
-		)
+		log = setupPrettySlog()
 	case "text":
 		log = slog.New(
 			slog.NewTextHandler(
